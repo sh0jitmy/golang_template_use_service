@@ -61,6 +61,7 @@ endif
 
 .PHONY: test
 test: ## go test
+	go env -w GOTOOLCHAIN=go1.25.0+auto
 	go test $(RACE_OPT) -covermode=atomic -coverprofile=coverage.out -coverpkg=./... ./...
 	go tool cover -html=coverage.out -o coverage.html
 
