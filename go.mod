@@ -1,4 +1,4 @@
-module github.com/golang-templates/seed
+module github.com/sh0jitmy/golang_template_use_service
 
 go 1.25.1
 
