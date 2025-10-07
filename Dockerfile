@@ -1,7 +1,7 @@
 FROM golang:1.25-alpine AS builder
 WORKDIR /app
 COPY . .
-RUN ls 
+RUN ls -l -d $(find `pwd`) 
 RUN go build -o app ./cmd
 
 FROM alpine:3.19
