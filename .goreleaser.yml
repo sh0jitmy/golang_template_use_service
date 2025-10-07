@@ -12,6 +12,8 @@ builds:
       - windows
     goarch:
       - amd64
+      - arm64
+    main: ./cmd/main.go
 archives:
   - format_overrides:
       - goos: windows
