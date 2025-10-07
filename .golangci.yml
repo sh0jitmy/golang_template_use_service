@@ -64,4 +64,4 @@ formatters:
   settings:
     goimports:
       local-prefixes:
-        - github.com/golang-templates/seed
+        - github.com/sh0jitmy/golang_template_use_service
