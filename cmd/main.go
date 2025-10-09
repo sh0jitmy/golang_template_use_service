@@ -11,7 +11,7 @@ import (
 func main() {
 	r := gin.Default()
 	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "Hello from Go App!"})
+		c.JSON(http.StatusOK, gin.H{"message": "Hello from Go App !"})
 	})
 	err := r.Run(":8080")
 	if err != nil {
