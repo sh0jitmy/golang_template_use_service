@@ -1,5 +1,10 @@
 name: CI - Build & Push Docker
 
+
+permissions:
+  contents: read
+  packages: write
+
 on:
   push:
     branches: [ main ]
@@ -9,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GH_USER: ${{ secrets.GH_USER }}
+      GH_USER: ${{ github.repository_owner }}
 
     steps:
       - uses: actions/checkout@v4
