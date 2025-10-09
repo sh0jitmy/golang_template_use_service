@@ -23,7 +23,7 @@ jobs:
         run: go build -o app ./cmd
 
       - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u $GH_USER --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GH_USER --password-stdin
 
       - name: Build & Push Docker image
         run: |
