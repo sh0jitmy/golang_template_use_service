@@ -40,7 +40,7 @@ jobs:
 
       - name: Update Helm values
         run: |
-          git clone https://github.com/${{GH_USER}}/go-service-helm.git
+          git clone https://github.com/${{ GH_USER }}/go-service-helm.git
           cd go-app-helm
           yq -i '.image.tag = "${{ env.IMAGE_TAG }}"' values.yaml
           git config user.name github-actions
