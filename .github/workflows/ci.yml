@@ -40,10 +40,10 @@ jobs:
 
       - name: Update Helm values
         run: |
-          git clone https://${{ secrets.HELM_TOKEN }}@github.com/$GH_USER/go-service-helm.git
-          cd go-service-helm
+          git clone https://${{ secrets.HELM_TOKEN }}@github.com/$GH_USER/go_service_helm.git
+          cd go_service_helm
           yq -i '.image.tag = "${{ env.IMAGE_TAG }}"' values.yaml
           git config user.name github-actions
           git config user.email actions@github.com
           git commit -am "Update image tag to ${{ env.IMAGE_TAG }}"
-          git push https://${{ secrets.HELM_TOKEN }}@github.com/$GH_USER/go-service-helm.git main
+          git push https://${{ secrets.HELM_TOKEN }}@github.com/$GH_USER/go_service_helm.git main
