@@ -12,11 +12,22 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: 
+          - linux/amd64
+          - linux/arm64
 
     env:
       GH_USER: ${{ github.repository_owner }}
 
     steps:
+      - name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+
       - uses: actions/checkout@v4
 
       - name: Set up Go
@@ -33,16 +44,8 @@ jobs:
       - name: Build & Push Docker image x64
         run: |
           IMAGE_TAG=$(git rev-parse --short HEAD)
-          IMAGE_NAME=ghcr.io/$GH_USER/go-app:$IMAGE_TAG
+          IMAGE_NAME=ghcr.io/$GH_USER/${{ matrix.platform}}-go-app:$IMAGE_TAG
           docker build -t $IMAGE_NAME .
-          docker push $IMAGE_NAME
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-
-      - name: Build & Push Docker image arm64 
-        run: |
-          IMAGE_TAG=$(git rev-parse --short HEAD)
-          IMAGE_NAME=ghcr.io/$GH_USER/arm64-go-app:$IMAGE_TAG
-          docker build -f Dockerfile_arm64 -t $IMAGE_NAME --platform linux/arm64 .
           docker push $IMAGE_NAME
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
