@@ -4,7 +4,7 @@ COPY . .
 RUN ls -l -d $(find `pwd`) 
 RUN go build -o app ./cmd
 
-FROM alpine:3.19
+FROM alpine:3.22
 WORKDIR /app
 COPY --from=builder /app/app .
 EXPOSE 8080
