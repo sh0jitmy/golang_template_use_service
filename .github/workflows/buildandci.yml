@@ -31,7 +31,7 @@ jobs:
       - name: Build Go binary for ${{ matrix.arch }}
         run: |
           mkdir -p bin
-          GOOS=linux GOARCH=${{ matrix.arch }} go build -o bin/main .
+          GOOS=linux GOARCH=${{ matrix.arch }} go build -o bin/app ./cmd
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
