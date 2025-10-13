@@ -1,0 +1,70 @@
+name: Build and Push Multi-Arch Go Image (Fast No-QEMU)
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: sh0jitmy/golang-service-template
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        arch: [ amd64, arm64 ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+
+      - name: Build Go binary for ${{ matrix.arch }}
+        run: |
+          mkdir -p bin
+          GOOS=linux GOARCH=${{ matrix.arch }} go build -o bin/main .
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Image (${{ matrix.arch }})
+        run: |
+          docker build \
+            -t ghcr.io/${{ github.repository }}:${{ matrix.arch }} \
+            --build-arg ARCH=${{ matrix.arch }} .
+          docker push ghcr.io/${{ github.repository }}:${{ matrix.arch }}
+
+  manifest:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create and Push Multi-Arch Manifest
+        run: |
+          docker manifest create ghcr.io/${{ github.repository }}:latest \
+            ghcr.io/${{ github.repository }}:amd64 \
+            ghcr.io/${{ github.repository }}:arm64
+          docker manifest push ghcr.io/${{ github.repository }}:latest
